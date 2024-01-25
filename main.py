@@ -1,17 +1,13 @@
-# This is a sample Python script.
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-import numpy
-import requests
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hijnj j j, {name}')  # Press ⌘F8 to toggle the breakpoint.
+import asyncio
+from banks.main_job import execute_once_daily
+from db.core import AsyncORM
+from db.models import Changes, Banks, TypeChanges
 
 
-# Press the green button in the gutter to run the script.
+async def startup():
+    await AsyncORM.create_tables()
+    await execute_once_daily()
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    asyncio.run(startup())
+    #loop.run_until_complete(execute_once_daily())
