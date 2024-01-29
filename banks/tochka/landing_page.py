@@ -1,4 +1,5 @@
 import asyncio
+import configparser
 import os
 import time
 import uuid
@@ -17,14 +18,21 @@ from banks.common_func.compare_text import compare_strings
 from banks.config import chrome_driver_path
 
 
-class LandingPage:
-    link_new_file = None
-    meta_data = None
+# Создайте экземпляр ConfigParser
+config = configparser.ConfigParser()
+# Прочитайте файл конфигурации
+config.read('.env')
+# Получите значения из файла конфигурации
+SITE_URL = config.get('Settings', 'NGROK_TUNNEL_URL')
 
-    change_to_db = None
+
+class LandingPage:
 
     def __init__(self, url):
         self.url_parse = url
+        self.link_new_file = None
+        self.meta_data = None
+        self.change_to_db = None
 
     @async_exception_handler
     async def parse(self):
@@ -115,7 +123,8 @@ class LandingPage:
                     link_old_file=change_from_db[0].link_new_file,
                     link_compare_file=excel_diff_dict["compare_path"],
                     title=None,
-                    description=f"Сначала смотрим excel файлы, если недостаточно переходим по ссылке: {file_name_html}."
+                    description=f"Сначала смотрим excel файлы,"
+                                f" если недостаточно переходим по ссылке: {SITE_URL}/get_compare_html/tochka/{file_name_html}.html"
                                 f"Сообщение от функции, которая сравнивает excel: {excel_diff_dict['description']}"
                 )
                 await AsyncORM.insert_change(class_change=self.change_to_db)

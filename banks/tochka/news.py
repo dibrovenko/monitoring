@@ -1,4 +1,5 @@
 import asyncio
+import uuid
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -13,14 +14,13 @@ from banks.config import chrome_driver_path
 
 
 class News:
-    titles = []
-    descriptions = []
-    links = []
-
-    changes_to_db = []
 
     def __init__(self, url):
         self.url_parse = url
+        self.titles = []
+        self.descriptions = []
+        self.links = []
+        self.changes_to_db = []
 
     @async_exception_handler
     async def parse(self):
@@ -38,12 +38,13 @@ class News:
         for news_block in news_blocks:
             date = news_block.find_element(By.CLASS_NAME, "news-item_date__JXUFm").text
             # Проверка актуальности новости
-            if datetime.strptime(date, "%d.%m.%Y") > datetime.now() - timedelta(days=30):
+            if datetime.strptime(date, "%d.%m.%Y") > datetime.now() - timedelta(days=45):
                 title = news_block.find_element(By.CLASS_NAME, "fs-xl").text
                 link = news_block.find_element(By.CLASS_NAME, "news-item_link__q88Vc").get_attribute("href")
                 self.titles.append(title)
                 self.descriptions.append(f"Дата новости: {date}")
                 self.links.append(link)
+
         driver.quit()
 
     @async_exception_handler
@@ -56,12 +57,14 @@ class News:
                     Changes(
                         bank=Banks.tochka,
                         typechanges=TypeChanges.news,
-                        meta_data=self.links[index],
-                        link_new_file=await screenshot_page(url=self.links[index], file_name=f'news_{title}.png'),
+                        # meta_data=self.links[index], - специально
+                        link_new_file=await screenshot_page(url=self.links[index], file_name=f'{uuid.uuid4()}.png'),
                         title=title,
-                        description=self.descriptions[index]
+                        description=f'{self.descriptions[index]} \n'
+                                    f'Ссылка на акцию:  {self.links[index]} \n'
+                                    f'Страница откуда бралась информация: {self.url_parse}'
+                                    )
                     )
-                )
         # отправляем все изменения одним запросом в бд
         await AsyncORM.insert_list_changes(list_class_changes=self.changes_to_db)
 

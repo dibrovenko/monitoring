@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Type
 from sqlalchemy import Integer, and_, cast, func, insert, inspect, or_, select, text
+from datetime import datetime, timedelta
 
 from banks.common_func.except_handlers import async_exception_handler
 from db.database import Base, async_engine, async_session_factory
@@ -23,7 +24,7 @@ class AsyncORM:
             await session.commit()
 
     @staticmethod
-    @async_exception_handler
+    #@async_exception_handler
     async def insert_list_changes(list_class_changes: List[Users | Changes]):
         try:
             async with async_session_factory() as session:
@@ -43,15 +44,14 @@ class AsyncORM:
             )
             res = await session.execute(query)
             result_orm = res.scalars().all()
-            print(f"{result_orm=}")
             result_dto = [ChangesDTO.model_validate(row, from_attributes=True) for row in result_orm]
-            print(f"{result_dto=}")
+            print(result_dto)
             return result_dto
 
     @staticmethod
     @async_exception_handler
     async def select_changes_for_compare(bank: Banks.__members__, typechanges: TypeChanges.__members__,
-                                         lim: int = 50) -> ChangesFULLDTO:
+                                         lim: int = 50) -> List[ChangesFULLDTO]:
         async with async_session_factory() as session:
             query = (
                 select(Changes)
@@ -62,5 +62,18 @@ class AsyncORM:
             res = await session.execute(query)
             result_orm = res.scalars().all()
             result_dto = [ChangesFULLDTO.model_validate(row, from_attributes=True) for row in result_orm]
-            print(f"{result_dto=}")
+            #print(result_dto)
+            return result_dto
+
+    @staticmethod
+    @async_exception_handler
+    async def select_changes_for_daily_notification() -> List[ChangesFULLDTO]:
+        async with async_session_factory() as session:
+            query = (
+                select(Changes).
+                    filter(Changes.date > (datetime.now() - timedelta(hours=22)))
+            )
+            res = await session.execute(query)
+            result_orm = res.scalars().all()
+            result_dto = [ChangesFULLDTO.model_validate(row, from_attributes=True) for row in result_orm]
             return result_dto

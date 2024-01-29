@@ -17,14 +17,14 @@ from banks.common_func.pdf_download import selenium_pdf_down
 
 
 class PdfFile:
-    titles = []
-    web_links = []
-    new_links = []
-    descriptions = []
-    changes_to_db = []
 
     def __init__(self, url):
         self.url_parse = url
+        self.titles = []
+        self.web_links = []
+        self.new_links = []
+        self.descriptions = []
+        self.changes_to_db = []
 
     @async_exception_handler
     async def parse(self):
@@ -51,8 +51,15 @@ class PdfFile:
             # скачиваем pdf и сохраняем
             link_new_file = await selenium_pdf_down(
                 url=f"https://tochka.com{file_link}",
-                download_path=f'{os.getcwd()}/banks/tochka/data'
-            )
+                download_path=f'{os.getcwd()}/banks/tochka/data')
+            if not os.path.exists(link_new_file):
+                link_new_file = await selenium_pdf_down(
+                    url=f"https://tochka.com{file_link}",
+                    download_path=f'{os.getcwd()}/banks/tochka/data')
+            if not os.path.exists(link_new_file):
+                print("pdf не сохранен")
+                continue
+
             self.titles.append(file_name)
             self.descriptions.append(file_type)
             self.web_links.append(f"https://tochka.com{file_link}")
@@ -60,11 +67,10 @@ class PdfFile:
             """self.file_data[file_type].append({'name': file_name,
                                               'web_link': f"https://tochka.com{file_link}",
                                               'link_new_file': link_new_file})"""
-        print(self.titles)
-        print(self.descriptions)
 
     @async_exception_handler
     async def compare(self):
+        await asyncio.sleep(2)
         changes_from_db = await AsyncORM.select_changes_for_compare(
             bank=Banks.tochka, typechanges=TypeChanges.pdf_file, lim=8)
         change_titles_from_dp = [item.title for item in changes_from_db]

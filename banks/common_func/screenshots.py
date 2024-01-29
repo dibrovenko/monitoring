@@ -4,10 +4,13 @@ import uuid
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
-from banks.common_func.except_handlers import exception_handler
+from banks.common_func.except_handlers import exception_handler, async_exception_handler
 
 
-@exception_handler
+from banks.config import chrome_driver_path
+
+
+#@async_exception_handler
 async def screenshot_page(url: str, file_name: str | None = None) -> str:
     """
     Создает скриншот ВСЕЙ веб-страницы с использованием браузера Google Chrome и сохраняет его в указанном файле.
@@ -30,7 +33,7 @@ async def screenshot_page(url: str, file_name: str | None = None) -> str:
         download_path = os.path.join(current_path, f'banks/tochka/data/{uuid.uuid4()}.png')
 
     # Указываем путь до исполняемого файла драйвера Google Chrome
-    s = Service(executable_path='/Users/p.dibrovenko/Desktop/monitor/banks/chromedriver')
+    s = Service(executable_path=chrome_driver_path)
 
     # Создаем экземпляр браузера с настройками и указываем путь до драйвера
     driver = webdriver.Chrome(service=s)

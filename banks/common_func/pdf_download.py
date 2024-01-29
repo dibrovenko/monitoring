@@ -6,6 +6,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 import os
 
+from selenium.webdriver.support.wait import WebDriverWait
+
 from banks.config import chrome_driver_path
 
 
@@ -61,7 +63,8 @@ async def selenium_pdf_down(url: str, download_path: str) -> str:
     FILENAME = f"{uuid.uuid4()}.pdf"
     js_code = js_code.replace("FILENAME.pdf", FILENAME)
     driver.execute_script(js_code)
-    await asyncio.sleep(5)
+    WebDriverWait(driver, 4)
+    await asyncio.sleep(3)
 
     # Закрываем браузер
     driver.quit()

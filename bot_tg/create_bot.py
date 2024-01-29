@@ -1,19 +1,24 @@
 import os
-from dotenv import load_dotenv, find_dotenv
+import configparser
 
 from aiogram import Bot, types
-from aiogram.dispatcher.dispatcher import Dispatcher
-#from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.dispatcher import Dispatcher
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 scheduler = AsyncIOScheduler()
 storage = MemoryStorage()
 
-load_dotenv(find_dotenv())
-
-bot = Bot(token=os.getenv('bot_token'))
+# Создайте экземпляр ConfigParser
+config = configparser.ConfigParser()
+# Прочитайте файл конфигурации
+config.read('.env')
+bot = Bot(token=config.get('Settings', 'bot_token'))
 dp = Dispatcher(bot=bot, storage=storage, run_tasks_by_default=True)
+
+
+from bot_tg.handlers import other
+other.register_handlers_other(dp)
 
 """
 from handlers import client, admin, collector, order_from_collector, other, errors, client_order_end

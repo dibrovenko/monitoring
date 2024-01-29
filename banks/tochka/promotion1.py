@@ -1,4 +1,5 @@
 import asyncio
+import uuid
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -13,16 +14,15 @@ from banks.config import chrome_driver_path
 
 
 class Promotion1:
-    titles = []
-    descriptions = []
-    date_starts = []
-    date_ends = []
-    links = []
-
-    changes_to_db = []
 
     def __init__(self, url):
         self.url_parse = url
+        self.titles = []
+        self.descriptions = []
+        self.date_starts = []
+        self.date_ends = []
+        self.links = []
+        self.changes_to_db = []
 
     @async_exception_handler
     async def parse(self):
@@ -65,13 +65,14 @@ class Promotion1:
                     Changes(
                         bank=Banks.tochka,
                         typechanges=TypeChanges.promotion1,
-                        meta_data=self.links[index],
+                        #meta_data=self.links[index],
                         link_new_file=await screenshot_page(
-                            url=self.links[index], file_name=f'promotion1_{title}.png'),
+                            url=self.links[index], file_name=f'{uuid.uuid4()}.png'),
                         title=title,
-                        description=(f'{self.descriptions[index]}'
-                                     f'Start Date: {self.date_starts[index]}'
-                                     f'End Date: {self.date_ends[index]}')
+                        description=(f'{self.descriptions[index]} Ссылка на новость:  {self.links[index]} \n'
+                                     f'Start Date: {self.date_starts[index]} '
+                                     f'End Date: {self.date_ends[index]} \n'
+                                     f'Страница откуда бралась информация: {self.url_parse}')
                     )
                 )
         # отправляем все изменения одним запросом в бд

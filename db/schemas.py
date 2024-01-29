@@ -24,3 +24,4 @@ class ChangesFULLDTO(ChangesDTO):
     link_old_file: str | None
     link_compare_file: str | None
     description: str | None
+    link_compare_file: str | None

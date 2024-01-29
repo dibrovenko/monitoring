@@ -14,15 +14,14 @@ class Tochka:
         self.pdf_file = PdfFile(url=tochka_configs['pdf_file'])
 
     async def job(self):
-        #await self.promotion1.parse()
-        #await self.promotion1.compare()
+        await self.promotion1.parse()
+        await self.promotion1.compare()
 
-        #await self.news.parse()
-        #await self.news.compare()
+        await self.news.parse()
+        await self.news.compare()
 
-        #await self.landing_page.parse()
-        #await self.landing_page.compare()
-
+        await self.landing_page.parse()
+        await self.landing_page.compare()
 
         await self.pdf_file.parse()
         await self.pdf_file.compare()
