@@ -1,3 +1,1 @@
-banks.common_func.except_handlers 2024-01-29 18:01:10,820 INFO func: AsyncORM.select_changes_for_daily_notificationПараметры: args=(), kwargs={}
-banks.common_func.except_handlers 2024-01-29 18:06:22,282 INFO func: AsyncORM.select_changes_for_daily_notificationПараметры: args=(), kwargs={}
-banks.common_func.except_handlers 2024-01-29 18:09:11,328 INFO func: AsyncORM.select_changes_for_daily_notificationПараметры: args=(), kwargs={}
+banks.common_func.except_handlers 2024-01-30 23:00:44,067 INFO func: AsyncORM.select_changes_for_compareПараметры: args=(), kwargs={'bank': 'vtb', 'typechanges': 'pdf_file'}

@@ -17,16 +17,9 @@ bot = Bot(token=config.get('Settings', 'bot_token'))
 dp = Dispatcher(bot=bot, storage=storage, run_tasks_by_default=True)
 
 
-from bot_tg.handlers import other
-other.register_handlers_other(dp)
+from bot_tg.handlers import start, commands, filter
+filter.register_handlers_filter(dp)
+commands.register_handlers_commands(dp)
+start.register_handlers_start(dp)
 
-"""
-from handlers import client, admin, collector, order_from_collector, other, errors, client_order_end
-client.register_handlers_clients(dp)
-admin.register_handlers_admin(dp)
-collector.register_handlers_collector(dp)
-order_from_collector.register_handlers_collector(dp)
-client_order_end.register_handlers_client_order_end(dp)
-errors.register_handlers_error(dp)
-other.register_handlers_other(dp) #должен быть ниже всех
-"""
+

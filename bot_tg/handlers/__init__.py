@@ -1,1 +1,1 @@
-from bot_tg.handlers import other
+from bot_tg.handlers import start, commands, filter

@@ -27,7 +27,7 @@ class Banks(enum.Enum):
 class TypeChanges(enum.Enum):
     news = "news"
     promotion1 = "promotion1"
-    landing_page = "landing_page.py"
+    landing_page = "landing_page"
     pdf_file = "pdf_file"
 
 

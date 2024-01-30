@@ -100,7 +100,10 @@ templates = Jinja2Templates(directory="banks")
 
 @app.get("/get_compare_html/{bank}/{file_name}", response_class=HTMLResponse)
 async def read_item(request: Request, bank: str, file_name: str):
-    return templates.TemplateResponse(f"/{bank}/data/{file_name}", {"request": request, "bank": bank})
+    try:
+        return templates.TemplateResponse(f"/{bank}/data/{file_name}", {"request": request, "bank": bank})
+    except:
+        raise HTTPException(status_code=400, detail="Файл не существует")
 
 
 @app.post("/notification_daily/", response_model=List_notification, status_code=status.HTTP_200_OK)

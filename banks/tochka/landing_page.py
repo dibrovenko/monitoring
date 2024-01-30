@@ -124,7 +124,7 @@ class LandingPage:
                     link_compare_file=excel_diff_dict["compare_path"],
                     title=None,
                     description=f"Сначала смотрим excel файлы,"
-                                f" если недостаточно переходим по ссылке: {SITE_URL}/get_compare_html/tochka/{file_name_html}.html"
+                                f" если недостаточно переходим по ссылке: {SITE_URL}/get_compare_html/tochka/{file_name_html}.html \n"
                                 f"Сообщение от функции, которая сравнивает excel: {excel_diff_dict['description']}"
                 )
                 await AsyncORM.insert_change(class_change=self.change_to_db)

@@ -55,7 +55,7 @@ class AsyncORM:
         async with async_session_factory() as session:
             query = (
                 select(Changes)
-                .where(Changes.typechanges == typechanges and Changes.bank == bank)
+                .where(Changes.typechanges == typechanges, Changes.bank == bank)
                 .order_by(Changes.date)
                 .limit(lim)
             )
