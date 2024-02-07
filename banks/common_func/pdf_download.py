@@ -24,6 +24,7 @@ async def selenium_pdf_down(url: str, download_path: str) -> str:
             'download.directory_upgrade': True,
             'safebrowsing.enabled': True
         })
+    chrome_options.add_argument('--ignore-certificate-errors')
 
     # Создаем экземпляр браузера с настройками и указываем путь до драйвера
     driver = webdriver.Chrome(service=s, options=chrome_options)

@@ -1,1 +1,3 @@
-banks.common_func.except_handlers 2024-01-30 23:00:44,067 INFO func: AsyncORM.select_changes_for_compareПараметры: args=(), kwargs={'bank': 'vtb', 'typechanges': 'pdf_file'}
+banks.common_func.except_handlers 2024-02-07 04:25:51,950 INFO func: PdfFile.parseПараметры: args=(<banks.vtb.pdf_file.PdfFile object at 0x1176e2b30>,), kwargs={}
+banks.common_func.except_handlers 2024-02-07 04:26:52,570 INFO func: PdfFile.compareПараметры: args=(<banks.vtb.pdf_file.PdfFile object at 0x1176e2b30>,), kwargs={}
+banks.common_func.except_handlers 2024-02-07 04:26:54,574 INFO func: AsyncORM.select_changes_for_compareПараметры: args=(), kwargs={'bank': <Banks.tochka: 'tochka'>, 'typechanges': <TypeChanges.pdf_file: 'pdf_file'>, 'lim': 8}

@@ -1,6 +1,15 @@
 import pandas as pd
 from pathlib import Path
 
+import asyncio
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support import expected_conditions as EC
+
+from banks.config import chrome_driver_path
+
 
 def excel_diff(path_OLD: Path, path_NEW: Path, path_to_save: str):
     Bool_Change = True
@@ -88,3 +97,34 @@ def excel_diff(path_OLD: Path, path_NEW: Path, path_to_save: str):
     # save
     writer._save()
     return {"Bool_Change": Bool_Change, "description": DESCRIPTION, "compare_path": fname}
+
+
+async def excel_diff_aspose(file_path1: str, file_path2: str) -> str:
+    s = Service(executable_path=chrome_driver_path)
+    driver = webdriver.Chrome(service=s)
+    await asyncio.sleep(3)
+    # URL страницы, на которой находится элемент для загрузки файла
+    url = 'https://products.aspose.app/cells/ru/comparison'
+    driver.get(url)
+
+    # Найдем элемент для загрузки файла по его ID
+    upload_input = driver.find_element(By.ID, 'UploadFileInput-779922903')
+    await asyncio.sleep(15)
+    # Отправляем путь к файлу на элемент для загрузки файла
+    upload_input.send_keys(file_path1)
+    await asyncio.sleep(4)
+
+    upload_input = driver.find_element(By.ID, 'UploadFileInput-779922904')
+    await asyncio.sleep(2)
+    # Отправляем путь к файлу на элемент для загрузки файла
+    upload_input.send_keys(file_path2)
+    await asyncio.sleep(15)
+
+    # Ждем, пока кнопка "СРАВНИВАТЬ" станет видимой
+    compare_button = WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.ID, "uploadButton"))
+    )
+    compare_button.click()
+    await asyncio.sleep(30)
+    url_link = driver.current_url
+    return url_link

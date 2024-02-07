@@ -3,8 +3,9 @@ import uuid
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from bs4 import BeautifulSoup
-
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 
 from banks.common_func.except_handlers import async_exception_handler
 from db.core import AsyncORM
@@ -33,45 +34,52 @@ class Promotion1:
         driver = webdriver.Chrome(service=s)
         driver.get(self.url_parse)
         await asyncio.sleep(3)
-        # Получаем HTML-код страницы и закрываем веб-драйвер
-        html = driver.page_source
-        driver.quit()
 
-        # Находим все блоки с itemprop="name"
-        soup = BeautifulSoup(html, 'html.parser')
-        sale_events = soup.find_all('div', {'itemscope': '', 'itemtype': 'https://schema.org/SaleEvent'})
-        # Извлекаем данные
-        for event in sale_events:
-            title = event.find('meta', {'itemprop': 'name'})['content'].strip()
-            description = event.find('meta', {'itemprop': 'description'})['content'].strip()
-            date_start = event.find('meta', {'itemprop': 'startDate'})['content'].strip()
-            date_end = event.find('meta', {'itemprop': 'endDate'})['content'].strip()
-            link = event.find('meta', {'itemprop': 'url'})['content'].strip()
+        # Ожидание загрузки всех элементов на странице
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "MlchtUI-OfferCard__BlockText")))
 
+        # Находим все блоки с акциями
+        action_blocks = driver.find_elements(By.CLASS_NAME, "MlchtUI-OfferCard")
+
+        # Нажимаем на каждую акцию
+        for block in action_blocks:
+            title = block.find_element(By.CLASS_NAME, 'MlchtUI-OfferCard__Title').text.strip()
+            description = block.find_element(By.CLASS_NAME, 'MlchtUI-OfferCard__Description').text.strip()
+            deadline = block.find_element(By.CSS_SELECTOR, 'p.sticker').text
+            block.click()
+            # Ждем загрузки новой страницы
+            wait.until(EC.number_of_windows_to_be(2))
+            # Переключаемся на новую вкладку
+            driver.switch_to.window(driver.window_handles[1])
+            # Получаем текущий URL
+            current_url = driver.current_url
             self.titles.append(title)
-            self.descriptions.append(description)
-            self.date_starts.append(date_start)
-            self.date_ends.append(date_end)
-            self.links.append(link)
+            self.descriptions.append(f"{description}. Дедлайн: {deadline}")
+            self.links.append(current_url)
+            await asyncio.sleep(1)
+            # Закрываем вкладку с акцией
+            driver.close()
+            # Переключаемся на основную вкладку
+            driver.switch_to.window(driver.window_handles[0])
+        driver.quit()
 
     @async_exception_handler
     async def compare(self):
-        changes_from_db = await AsyncORM.select_changes_for_compare(bank=Banks.tochka,
+        changes_from_db = await AsyncORM.select_changes_for_compare(bank=Banks.sberbank,
                                                                     typechanges=TypeChanges.promotion1)
         change_titles_from_dp = [item.title for item in changes_from_db]
         for index, title in enumerate(self.titles):
             if not title in change_titles_from_dp:
                 self.changes_to_db.append(
                     Changes(
-                        bank=Banks.tochka,
+                        bank=Banks.sberbank,
                         typechanges=TypeChanges.promotion1,
                         #meta_data=self.links[index],
                         link_new_file=await screenshot_page(
-                            url=self.links[index], file_name=f'{uuid.uuid4()}.png'),
+                            url=self.links[index], file_name=f'{uuid.uuid4()}.png', file_name_bank="sberbank"),
                         title=title,
                         description=(f'{self.descriptions[index]} Ссылка на акцию:  {self.links[index]} \n'
-                                     f'Start Date: {self.date_starts[index]} '
-                                     f'End Date: {self.date_ends[index]} \n'
                                      f'Страница откуда бралась информация: {self.url_parse}')
                     )
                 )

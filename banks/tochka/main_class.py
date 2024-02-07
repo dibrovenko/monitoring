@@ -1,7 +1,7 @@
-from .news import News
-from .pdf_file import PdfFile
-from .promotion1 import Promotion1
-from .landing_page import LandingPage
+from banks.tochka.news import News
+from banks.tochka.pdf_file import PdfFile
+from banks.tochka.promotion1 import Promotion1
+from banks.tochka.landing_page import LandingPage
 
 
 class Tochka:
