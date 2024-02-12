@@ -31,7 +31,7 @@ async def selenium_pdf_down(url: str, download_path: str) -> str:
     # Заходим на страницу
     driver.get(url)
     # Ждем некоторое время для загрузки страницы
-    await asyncio.sleep(3)
+    await asyncio.sleep(5)
 
     # Выполняем JS код
     js_code = """
@@ -65,7 +65,7 @@ async def selenium_pdf_down(url: str, download_path: str) -> str:
     js_code = js_code.replace("FILENAME.pdf", FILENAME)
     driver.execute_script(js_code)
     WebDriverWait(driver, 4)
-    await asyncio.sleep(3)
+    await asyncio.sleep(5)
 
     # Закрываем браузер
     driver.quit()

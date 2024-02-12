@@ -15,6 +15,7 @@ xlsxwriter~=3.1.9
 aiosqlite~=0.19.0
 greenlet~=3.0.3
 sentry-sdk~=1.39.2
+fake-useragent~=1.4.0
 APScheduler~=3.10.4
 
 pikepdf~=8.11.2

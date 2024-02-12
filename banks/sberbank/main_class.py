@@ -15,11 +15,12 @@ class Sberbank:
         self.pdf_file = PdfFile(url=sberbank_configs['pdf_file'])
 
     async def job(self):
-        await self.promotion1.parse()
-        await self.promotion1.compare()
 
         await self.news.parse()
         await self.news.compare()
+
+        await self.promotion1.parse()
+        await self.promotion1.compare()
 
         await self.landing_page.parse()
         await self.landing_page.compare()

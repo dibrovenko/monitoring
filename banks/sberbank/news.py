@@ -83,17 +83,20 @@ class News:
         # Инициализация драйвера
         driver = webdriver.Chrome(service=s, options=chrome_options)
         driver.get(self.url_parse)
-
         # Находим блок с новостями
         wait = WebDriverWait(driver, 10)
         wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "na-articles")))
         # Нахождение кнопки по обновленному XPath и нажатие на нее
-        button = driver.find_element(By.XPATH,
-                                     "/html/body/div[1]/div/div[3]/div/div/div/div[3]/section/div/div/div/div[2]/button")
-        button.click()
-        await asyncio.sleep(0.3)
-        news_block = driver.find_elements(By.CLASS_NAME, "na-articles")[0]
+        try:
+            button = driver.find_element(By.XPATH,
+                                         "/html/body/div[1]/div/div[3]/div/div/div/div[3]/section/div/div/div/div[2]/button")
+            await asyncio.sleep(2.5)
+            button.click()
+            await asyncio.sleep(0.1)
+        except:
+            pass
 
+        news_block = driver.find_elements(By.CLASS_NAME, "na-articles")[0]
         # Извлекаем дату и заголовок каждой новости из блока
         articles = news_block.find_elements(By.CLASS_NAME, "na-article")
         title = articles[index].find_element(By.CLASS_NAME, "na-article__title")
@@ -106,6 +109,7 @@ class News:
 
         # Закрываем веб-драйвер после использования
         driver.quit()
+        await asyncio.sleep(0.3)
         return download_path, current_url
 
 

@@ -137,8 +137,8 @@ async def on_shutdown():
 
 async def startup_test():
     await AsyncORM.create_tables()
-    #await execute_once_daily()
-    #await test_execute_once_daily()
+    await execute_once_daily()
+    await test_execute_once_daily()
     await execute_once_daily()
     #await notification_text_daily()
 

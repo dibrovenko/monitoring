@@ -1,5 +1,6 @@
 import asyncio
 import os
+import logging
 
 import pikepdf
 
@@ -14,6 +15,23 @@ from db.core import AsyncORM
 from db.models import Banks, Changes, TypeChanges
 from banks.config import chrome_driver_path
 from banks.common_func.pdf_download import selenium_pdf_down
+
+
+# получение пользовательского логгера и установка уровня логирования
+py_logger = logging.getLogger(__name__)
+py_logger.setLevel(logging.INFO)
+
+# настройка обработчика и форматировщика в соответствии с нашими нуждами
+log_file = os.path.join(f"log_directory/{__name__}.log")
+py_handler = logging.FileHandler(log_file, mode='w')
+
+#py_handler = logging.FileHandler(f"{__name__}.log", mode='w')
+py_formatter = logging.Formatter("%(name)s %(asctime)s %(levelname)s %(message)s")
+
+# добавление форматировщика к обработчику
+py_handler.setFormatter(py_formatter)
+# добавление обработчика к логгеру
+py_logger.addHandler(py_handler)
 
 
 class PdfFile:
@@ -57,20 +75,23 @@ class PdfFile:
                     url=f"https://tochka.com{file_link}",
                     download_path=f'{os.getcwd()}/banks/tochka/data')
             if not os.path.exists(link_new_file):
-                print("pdf не сохранен")
-                continue
-
-            self.titles.append(file_name)
-            self.descriptions.append(file_type)
-            self.web_links.append(f"https://tochka.com{file_link}")
-            self.new_links.append(link_new_file)
+                link_new_file = await selenium_pdf_down(
+                    url=f"https://tochka.com{file_link}",
+                    download_path=f'{os.getcwd()}/banks/tochka/data')
+            if not os.path.exists(link_new_file):
+                py_logger.error(f"tochka, pdf файл не сохранен: https://tochka.com{file_link}")
+            else:
+                self.titles.append(file_name)
+                self.descriptions.append(file_type)
+                self.web_links.append(f"https://tochka.com{file_link}")
+                self.new_links.append(link_new_file)
 
 
     @async_exception_handler
     async def compare(self):
         await asyncio.sleep(2)
         changes_from_db = await AsyncORM.select_changes_for_compare(
-            bank=Banks.tochka, typechanges=TypeChanges.pdf_file, lim=8)
+            bank=Banks.tochka, typechanges=TypeChanges.pdf_file, lim=12)
         change_titles_from_dp = [item.title for item in changes_from_db]
         change_meta_datas_from_dp = [item.meta_data for item in changes_from_db]
 
@@ -94,7 +115,7 @@ class PdfFile:
                             title=title,
                             description=f"Тип этого файла: {self.descriptions[index]}. "
                                         f"Появился файл с новыми метаданнами,"
-                                        f" но есть файл с похожим названием: {change_titles_from_dp[index_if_name]} \n"
+                                        f" но есть файл с похожим названием: *{change_titles_from_dp[index_if_name]}* \n"
                                         f"Файл был скачен отсюда: {self.web_links[index]} \n"
                                         f"Cоветуем сравнивать pdf файлы тут: https://tools.pdf24.org/ru/compare-pdf"
                         )
@@ -125,7 +146,7 @@ class PdfFile:
                         title=title,
                         description=f"Тип этого файла: {self.descriptions[index]}. "
                                     f"Появился файл с такими же метаданнами,"
-                                    f" только название у него было {change_titles_from_dp[index_from_dp]} \n"
+                                    f" только название у него было *{change_titles_from_dp[index_from_dp]}* \n"
                                     f"Но лучше перепроверить и  сравнивать pdf файлы"
                                     f" тут: https://tools.pdf24.org/ru/compare-pdf \n"
                                     f"Файл был скачен отсюда: {self.web_links[index]} "

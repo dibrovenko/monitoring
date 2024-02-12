@@ -69,9 +69,9 @@ class Promotion1:
                         link_new_file=await screenshot_page(
                             url=self.links[index], file_name=f'{uuid.uuid4()}.png'),
                         title=title,
-                        description=(f'{self.descriptions[index]} Ссылка на акцию:  {self.links[index]} \n'
-                                     f'Start Date: {self.date_starts[index]} '
-                                     f'End Date: {self.date_ends[index]} \n'
+                        description=(f'{self.descriptions[index]} \nСсылка на акцию:  {self.links[index]} \n'
+                                     f'start date: {self.date_starts[index]} '
+                                     f'end date: {self.date_ends[index]} \n'
                                      f'Страница откуда бралась информация: {self.url_parse}')
                     )
                 )

@@ -96,7 +96,7 @@ class Promotion1:
                             title=title,
                             description=f"Появилася акция с новыми метаданнами, подробнее тут: {self.new_links[index]}\n"
                                         f"Однако, существует акция с схожим названием:"
-                                        f" {change_titles_from_dp[index_if_name]} \n"
+                                        f" *{change_titles_from_dp[index_if_name]}* \n"
                                         f"Cоветуем сравнивать pdf файлы тут: https://tools.pdf24.org/ru/compare-pdf"
                         )
                     )
@@ -129,10 +129,10 @@ class Promotion1:
                         link_old_file=changes_from_db[index_from_dp].link_old_file,
                         title=title,
                         description=f"Появилась акция с аналогичными метаданными,"
-                                    f" только название у нее было {change_titles_from_dp[index_from_dp]} \n"
+                                    f" только название у нее было: *{change_titles_from_dp[index_from_dp]}* \n"
                                     f"Но лучше перепроверить и  сравнивать pdf файлы"
-                                    f" тут: https://tools.pdf24.org/ru/compare-pdf,"
-                                    f" подробнее про акцию тут: {self.new_links[index]}\n"
+                                    f" тут: https://tools.pdf24.org/ru/compare-pdf "
+                                    f"Подробнее про акцию тут: {self.new_links[index]}\n"
                     )
                 )
         # отправляем все изменения одним запросом в бд

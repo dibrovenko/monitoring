@@ -79,7 +79,7 @@ class Promotion1:
                         link_new_file=await screenshot_page(
                             url=self.links[index], file_name=f'{uuid.uuid4()}.png', file_name_bank="sberbank"),
                         title=title,
-                        description=(f'{self.descriptions[index]} Ссылка на акцию:  {self.links[index]} \n'
+                        description=(f'{self.descriptions[index]} \nСсылка на акцию:  {self.links[index]} \n'
                                      f'Страница откуда бралась информация: {self.url_parse}')
                     )
                 )

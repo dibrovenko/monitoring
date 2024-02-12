@@ -54,8 +54,8 @@ def excel_diff(path_OLD: Path, path_NEW: Path, path_to_save: str):
             Bool_Change = False
 
     dfDiff = dfDiff.sort_index().fillna('')
-    DESCRIPTION = (f'\nNew Rows: {newRows} \n'
-                   f'Dropped Rows: {droppedRows}')
+    DESCRIPTION = (f'new rows: {newRows}, '
+                   f'dropped rows: {droppedRows}')
     # Save output and format
     fname = f'{path_to_save}/{path_OLD.stem} vs {path_NEW.stem}.xlsx'
     writer = pd.ExcelWriter(fname, engine='xlsxwriter')
@@ -102,19 +102,19 @@ def excel_diff(path_OLD: Path, path_NEW: Path, path_to_save: str):
 async def excel_diff_aspose(file_path1: str, file_path2: str) -> str:
     s = Service(executable_path=chrome_driver_path)
     driver = webdriver.Chrome(service=s)
-    await asyncio.sleep(3)
+    await asyncio.sleep(2)
     # URL страницы, на которой находится элемент для загрузки файла
     url = 'https://products.aspose.app/cells/ru/comparison'
     driver.get(url)
-
+    await asyncio.sleep(10)
     # Найдем элемент для загрузки файла по его ID
-    upload_input = driver.find_element(By.ID, 'UploadFileInput-779922903')
-    await asyncio.sleep(15)
+    upload_input = driver.find_element(By.XPATH, '/html/body/div[2]/div[1]/div[2]/div/div/div[1]/form/div[1]/div[1]/div/div[1]/input')
+    await asyncio.sleep(4)
     # Отправляем путь к файлу на элемент для загрузки файла
     upload_input.send_keys(file_path1)
-    await asyncio.sleep(4)
+    await asyncio.sleep(7)
 
-    upload_input = driver.find_element(By.ID, 'UploadFileInput-779922904')
+    upload_input = driver.find_element(By.XPATH, '/html/body/div[2]/div[1]/div[2]/div/div/div[1]/form/div[2]/div[1]/div/div[1]/input')
     await asyncio.sleep(2)
     # Отправляем путь к файлу на элемент для загрузки файла
     upload_input.send_keys(file_path2)
@@ -127,4 +127,5 @@ async def excel_diff_aspose(file_path1: str, file_path2: str) -> str:
     compare_button.click()
     await asyncio.sleep(30)
     url_link = driver.current_url
+    driver.quit()
     return url_link

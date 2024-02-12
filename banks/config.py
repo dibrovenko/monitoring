@@ -26,10 +26,10 @@ sberbank = {
 }
 
 vtb = {
-    "news": "https://alfabank.ru/news/t/release/",
-    "landing_page": "https://alfabank.ru/sme/tariffs/compare/?tid=6&tid=2&tid=1&tid=5&tid=4&tid=3",
-    "pdf_file": "https://www.vtb.ru/tarify/korporativnym-klientam/",
-    "promotion1": "https://alfabank.ru/sme/quick/docstariffs/?tab=action&accordion-tab=openacc0"
+    "news": "https://www.vtb.ru/tarify/korporativnym-klientam/",
+    "landing_page": "https://www.vtb.ru/malyj-biznes/otkryt-schet/sravnenie-pakety-uslug/",
+    "pdf_file_from_landing_page": "https://www.vtb.ru/malyj-biznes/otkryt-schet/sravnenie-pakety-uslug/",
+    "pdf_file": "https://www.vtb.ru/tarify/korporativnym-klientam/"
 }
 
 bank_configs = {

@@ -78,7 +78,7 @@ class PdfFile:
     async def compare(self):
         await asyncio.sleep(2)
         changes_from_db = await AsyncORM.select_changes_for_compare(
-            bank=Banks.tochka, typechanges=TypeChanges.pdf_file, lim=8)
+            bank=Banks.vtb, typechanges=TypeChanges.pdf_file, lim=8)
         change_titles_from_dp = [item.title for item in changes_from_db]
         change_meta_datas_from_dp = [item.meta_data for item in changes_from_db]
 
@@ -95,7 +95,7 @@ class PdfFile:
                                                             file_path2=changes_from_db[index_if_name].link_new_file)
                     self.changes_to_db.append(
                         Changes(
-                            bank=Banks.tochka,
+                            bank=Banks.vtb,
                             typechanges=TypeChanges.pdf_file,
                             meta_data=self.meta_data[index],
                             link_new_file=self.new_links[index],
@@ -103,7 +103,7 @@ class PdfFile:
                             title=title,
                             description=f"{self.descriptions[index]}. "
                                         f"Появился файл с новыми метаданнами,"
-                                        f" но есть файл с похожим названием: {change_titles_from_dp[index_if_name]} \n"
+                                        f" но есть файл с похожим названием: *{change_titles_from_dp[index_if_name]}* \n"
                                         f"Файл был скачен отсюда: {self.web_links[index]} \n"
                                         f"Страница, на которой сравнили файлы: {apose_compare} \n"
                                         f"Если ссылка устарела, то сравни самостоятельно здесь:"
@@ -113,7 +113,7 @@ class PdfFile:
                 else:
                     self.changes_to_db.append(
                         Changes(
-                            bank=Banks.tochka,
+                            bank=Banks.vtb,
                             typechanges=TypeChanges.pdf_file,
                             meta_data=self.meta_data[index],
                             link_new_file=self.new_links[index],
@@ -130,7 +130,7 @@ class PdfFile:
                                                         file_path2=changes_from_db[index_from_dp].link_new_file)
                 self.changes_to_db.append(
                     Changes(
-                        bank=Banks.tochka,
+                        bank=Banks.vtb,
                         typechanges=TypeChanges.pdf_file,
                         meta_data=self.meta_data[index],
                         link_new_file=self.new_links[index],
@@ -138,11 +138,11 @@ class PdfFile:
                         title=title,
                         description=f"{self.descriptions[index]}. "
                                     f"Появился файл с такими же метаданнами,"
-                                    f" только название у него было {change_titles_from_dp[index_from_dp]} \n"
+                                    f" только название у него было *{change_titles_from_dp[index_from_dp]}* \n"
                                     f"Но лучше перепроверить и посмотреть сравнение файлов тут: {apose_compare} \n"
                                     f"Если ссылка устарела, то сравни самостоятельно здесь:"
                                     f" https://products.aspose.app/cells/ru/comparison"
-                                    f"Файл был скачен отсюда: {self.web_links[index]} "
+                                    f" Файл был скачен отсюда: {self.web_links[index]} "
                     )
                 )
 

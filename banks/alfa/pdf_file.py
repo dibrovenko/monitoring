@@ -100,9 +100,9 @@ class PdfFile:
                             link_new_file=pdf_download_path,
                             link_old_file=changes_from_db[index_if_name].link_new_file,
                             title=title,
-                            description=f"Появилcя тариыф с новыми метаданнами, подробнее тут: {self.new_links[index]}\n"
+                            description=f"Появилcя тариф с новыми метаданнами, подробнее тут: {self.new_links[index]}\n"
                                         f"Однако, существует тариф с схожим названием:"
-                                        f" {change_titles_from_dp[index_if_name]} \n"
+                                        f" *{change_titles_from_dp[index_if_name]}* \n"
                                         f"Файл взят c этой странице: {self.url_parse} \n"
                                         f"Cоветуем сравнивать pdf файлы тут: https://tools.pdf24.org/ru/compare-pdf"
 
@@ -138,7 +138,7 @@ class PdfFile:
                         link_old_file=changes_from_db[index_from_dp].link_old_file,
                         title=title,
                         description=f"Появился тариф с аналогичными метаданными,"
-                                    f" только название у него было {change_titles_from_dp[index_from_dp]} \n"
+                                    f" только название у него было: *{change_titles_from_dp[index_from_dp]}* \n"
                                     f"Но лучше перепроверить и  сравнивать pdf файлы"
                                     f" тут: https://tools.pdf24.org/ru/compare-pdf,"
                                     f" подробнее про тариф тут: {self.new_links[index]}\n"

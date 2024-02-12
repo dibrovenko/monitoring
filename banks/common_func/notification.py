@@ -25,11 +25,14 @@ async def notification_text_daily() -> List_notification:
     data = []
     for change in changes_from_db:
         data.append(Data_notification(
-            text=f"Номер: {change.number}\n"
-                 f"Банк: {str(change.bank)[6:]}\n"
-                 f"Тип изменения: {str(change.typechanges)[12:]}\n"
-                 f"Заголовок: {change.title}\n"
-                 f"Описание: {change.description}\n",
+            text=f"`{change.number}`\n"
+                 f"**Банк:** {str(change.bank)[6:]}\n"
+                 f"**Тип изменения:** {str(change.typechanges)[12:]}\n"
+                 f"**Заголовок:** {change.title}\n"
+                 f"**Описание:** {change.description}\n"
+                 f">*При открытии ссылки, необходимо удалить 'https://www.tinkoff.ru/' из начала ссылки - костыль,"
+                 f" time не дает отправлять обычные ссылки ботам. Если ссылка все равно не открывается, возможно она "
+                 f"заблокирована. В таком случае, откройте ее на нерабочем устройстве.*",
             bank=str(change.bank)[6:],
             file=[
                 File(name_file="new",

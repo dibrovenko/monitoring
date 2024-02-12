@@ -1,5 +1,5 @@
 from typing import List, Type
-from sqlalchemy import Integer, and_, cast, func, insert, inspect, or_, select, text
+from sqlalchemy import Integer, and_, cast, func, insert, inspect, or_, select, text, desc
 from datetime import datetime, timedelta
 
 from banks.common_func.except_handlers import async_exception_handler
@@ -36,7 +36,7 @@ class AsyncORM:
 
     @staticmethod
     @async_exception_handler
-    async def select_changes() -> ChangesDTO:
+    async def select_changes() -> type(ChangesDTO):
         async with async_session_factory() as session:
             query = (
                 select(Changes)
@@ -56,7 +56,7 @@ class AsyncORM:
             query = (
                 select(Changes)
                 .where(Changes.typechanges == typechanges, Changes.bank == bank)
-                .order_by(Changes.date)
+                .order_by(desc(Changes.date))
                 .limit(lim)
             )
             res = await session.execute(query)
@@ -77,3 +77,17 @@ class AsyncORM:
             result_orm = res.scalars().all()
             result_dto = [ChangesFULLDTO.model_validate(row, from_attributes=True) for row in result_orm]
             return result_dto
+
+    @staticmethod
+    #@async_exception_handler
+    async def update_date():
+        async with async_session_factory() as session:
+            query = (
+                select(Changes)
+            )
+            res = await session.execute(query)
+            result_orm = res.scalars().all()
+
+            for result in result_orm:
+                result.date = result.date - timedelta(days=1)
+            await session.commit()
