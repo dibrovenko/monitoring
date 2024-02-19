@@ -28,4 +28,3 @@ class Vtb:
         await self.pdf_file_from_langing_page.compare()
 
 
-

@@ -51,7 +51,7 @@ class LandingPage:
 
         wait = WebDriverWait(driver, 30)
         wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "RubTariffsCardList__item")))
-        await asyncio.sleep(10)
+        await asyncio.sleep(15)
 
         # Нахождение элемента с помощью CSS-селектора
         try:

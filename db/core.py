@@ -1,4 +1,7 @@
-from typing import List, Type
+import os
+import shutil
+from typing import List, Type, Literal
+
 from sqlalchemy import Integer, and_, cast, func, insert, inspect, or_, select, text, desc
 from datetime import datetime, timedelta
 
@@ -11,10 +14,31 @@ from db.schemas import ChangesDTO, ChangesFULLDTO
 class AsyncORM:
     # Асинхронный вариант, не показанный в видео
     @staticmethod
-    async def create_tables():
-        async with async_engine.begin() as conn:
-            #await conn.run_sync(Base.metadata.drop_all)
-            await conn.run_sync(Base.metadata.create_all)
+    async def create_tables(flag: Literal['delete', 'restart']):
+        if flag == "delete":
+
+            async with async_engine.begin() as conn:
+                await conn.run_sync(Base.metadata.drop_all)
+                await conn.run_sync(Base.metadata.create_all)
+
+            for bank in Banks:
+                if os.path.exists(f"banks/{bank.value}/data"):
+                    shutil.rmtree(f"banks/{bank.value}/data")
+                    os.mkdir(f"banks/{bank.value}/data")
+                else:
+                    os.mkdir(f"banks/{bank.value}/data")
+
+        elif flag == "restart":
+
+            async with async_engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+
+            for bank in Banks:
+                if not os.path.exists(f"banks/{bank.value}/data"):
+                    os.mkdir(f"banks/{bank.value}/data")
+
+        else:
+            raise ValueError("Недопустимое значение аргумента")
 
     @staticmethod
     @async_exception_handler

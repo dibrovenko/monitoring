@@ -31,10 +31,11 @@ class News:
         # Инициализация драйвера
         driver = webdriver.Chrome(service=s)
         driver.get(self.url_parse)
-        await asyncio.sleep(6)
         # Находим кнопку по классу и кликаем на нее
-        button = driver.find_element(By.CSS_SELECTOR, '.buttonstyles__Box-foundation-kit__sc-sa2uer-2.LnzIL')
-        button.click()
+        """button = driver.find_element(By.CSS_SELECTOR, '.buttonstyles__Box-foundation-kit__sc-sa2uer-2.LnzIL')
+        button.click()"""
+        await asyncio.sleep(15)
+        driver.find_element(By.ID, "cookie-buttons").click()
         await asyncio.sleep(6)
 
         # Получение HTML-кода страницы

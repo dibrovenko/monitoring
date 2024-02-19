@@ -75,7 +75,7 @@ async def update_new_link(typechanges: TypeChanges.__members__, new_link: str):
 
 
 async def test_all():
-    await update_title(typechanges=TypeChanges.news, title_old="Альфа-Банк повысит ставку по накопительному счету с 1 января",
+    await update_title(typechanges=TypeChanges.news, title_old="Альфа-Банк получил 118 млрд рублей чистой прибыли по итогам 2023 года",
                        title_new="Измененная новость")
 
     await update_title(typechanges=TypeChanges.promotion1, title_old="Правила проведения Акции «Твоя выгода» для юридических лиц и индивидуальных предпринимателей клиентов Банка сегмента «Малый и микробизнес»",

@@ -22,6 +22,11 @@ class Banks(enum.Enum):
     alfa = "alfa"
     tochka = "tochka"
     vtb = "vtb"
+    raif = "raif"
+    modul = "modul"
+    mts = "mts"
+    ozon = "ozon"
+    open = "open"
 
 
 class TypeChanges(enum.Enum):

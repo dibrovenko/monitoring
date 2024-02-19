@@ -40,8 +40,8 @@ class News:
         for block in news_blocks:
             date = block.find('span',
                               class_='typography__secondary_36jpp typography__secondary-medium_kzul5').text.strip()
-            title = block.find('h3',
-                               class_='aJQuP lJQuP xJQuP FJQuP mG2mw GG2mw __G2mw aiG2mw d2C8J e2C8J').text.strip()
+            title = block.find('h3').text.strip()
+                               #class_='aJQuP lJQuP xJQuP FJQuP mG2mw GG2mw __G2mw aiG2mw d2C8J e2C8J').text.strip()
             link = 'https://alfabank.ru' + block.find('a')['href']
             self.titles.append(title)
             self.descriptions.append(f"Дата новости: {date}")

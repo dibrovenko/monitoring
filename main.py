@@ -72,7 +72,7 @@ async def on_startup():
         py_logger.info(f"set_webhook: {set_webhook}")
 
     # запускаем базу данных
-    await AsyncORM.create_tables()
+    await AsyncORM.create_tables(flag="restart")
     #asyncio.create_task(execute_once_daily())
 
     # Добавляем задачу, которая будет выполняться каждую минуту и запускаем планировщик
@@ -136,10 +136,11 @@ async def on_shutdown():
 
 
 async def startup_test():
-    await AsyncORM.create_tables()
+    await AsyncORM.create_tables(flag='restart')
     await execute_once_daily()
-    await test_execute_once_daily()
-    await execute_once_daily()
+    #await test_execute_once_daily()
+    #await execute_once_daily()
+
     #await notification_text_daily()
 
 

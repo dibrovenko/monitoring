@@ -32,11 +32,40 @@ vtb = {
     "pdf_file": "https://www.vtb.ru/tarify/korporativnym-klientam/"
 }
 
+raif = {
+    "pdf_file": ["https://www.raiffeisen.ru/static/common/business/tariff_book_short.pdf",
+                 "https://www.raiffeisen.ru/static/common/business/tariff_book.pdf"]
+}
+
+modul = {
+    "pdf_file":
+        ["https://modulbank.ru/fs/files/Prilozhenie_2_k_oficialnomu_polnomu_sborniku_tarifov_sistemy_Modulbank.pdf",
+         "https://modulbank.ru/fs/files/oficialnyj_polnyj_sbornik_tarifov_sistemy_modulbank.pdf"]
+}
+
+mts = {
+    "pdf_file": "https://www.mtsbank.ru/upload/static/documents/malomu-biznesu/raschetny-schet/Doc-Usloviya-KBO-web.pdf"
+}
+
+ozon = {
+    "pdf_file": "https://cdn2.ozone.ru/s3/ob-landing/static/docs/ecom/products/rules/Тарифы%20Ozon%20Счёт%20для%20бизнеса%2020231213.pdf"
+}
+
+open = {
+    "pdf_file": "https://cdn.open.ru/storage/files/tariffs_msb.pdf"
+}
+
+
 bank_configs = {
     "tochka": tochka,
     "alfa": alfa,
     "sberbank": sberbank,
-    "vtb": vtb
+    "vtb": vtb,
+    "raif": raif,
+    "modul": modul,
+    "mts": mts,
+    "ozon": ozon,
+    "open": open
 }
 
 
