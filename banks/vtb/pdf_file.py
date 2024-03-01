@@ -166,9 +166,10 @@ async def download_excel(url: str) -> str:
     os.mkdir(download_path)
 
     # Создаем экземпляр браузера с настройками и указываем путь до драйвера
+    s = Service(executable_path=chrome_driver_path)
     chrome_options = Options()
     chrome_options.add_experimental_option('prefs', {'download.default_directory': download_path})
-    driver = webdriver.Chrome(options=chrome_options)
+    driver = webdriver.Chrome(service=s, options=chrome_options)
     driver.get(url)
     # Ждем некоторое время для загрузки страницы
     await asyncio.sleep(3)

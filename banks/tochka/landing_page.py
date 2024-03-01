@@ -53,7 +53,8 @@ class LandingPage:
 
         # Заголовк + первая строчка таблицы
         sheet.append(["Что входит", "Тариф 1", "Тариф 2", "Тариф 3", "Тариф 4"])
-        header_table = driver.find_element(By.XPATH, '//*[@id="__next"]/div[1]/main/div[2]/div/div/div/div[3]')
+        #header_table = driver.find_element(By.XPATH, '//*[@id="__next"]/div[1]/main/div[2]/div/div/div/div[3]')
+        header_table = driver.find_element(By.XPATH, '// *[ @ id = "__next"] / div[1] / main / div[1] / div / div / div / div[3]')
         div_blocks = header_table.find_elements(By.CSS_SELECTOR, 'div.p-2.tariffs-common_item__iebKT')
         data_first_column = ["_"]
         for div_block in div_blocks:

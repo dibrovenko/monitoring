@@ -16,14 +16,14 @@ class Sberbank:
 
     async def job(self):
 
+        await self.news.parse()
+        await self.news.compare()
+
         await self.landing_page.parse()
         await self.landing_page.compare()
 
         await self.pdf_file.parse()
         await self.pdf_file.compare()
-
-        await self.news.parse()
-        await self.news.compare()
 
         await self.promotion1.parse()
         await self.promotion1.compare()

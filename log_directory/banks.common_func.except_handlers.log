@@ -1,2 +1,1 @@
-banks.common_func.except_handlers 2024-02-19 23:15:58,784 INFO func: News.compareПараметры: args=(<banks.vtb.news.News object at 0x12a236920>,), kwargs={}
-banks.common_func.except_handlers 2024-02-19 23:15:58,785 INFO func: AsyncORM.select_changes_for_compareПараметры: args=(), kwargs={'bank': <Banks.vtb: 'vtb'>, 'typechanges': <TypeChanges.news: 'news'>}
+banks.common_func.except_handlers 2024-03-01 20:11:53,690 INFO func: AsyncORM.select_changes_for_daily_notificationПараметры: args=(), kwargs={}
