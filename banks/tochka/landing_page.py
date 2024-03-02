@@ -6,6 +6,7 @@ import uuid
 from pathlib import Path
 
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from openpyxl import Workbook
@@ -38,8 +39,12 @@ class LandingPage:
     async def parse(self):
         # Указываем путь до исполняемого файла драйвера Google Chrome
         s = Service(executable_path=chrome_driver_path)
-        # Инициализация веб-драйвера и открываем страницу
-        driver = webdriver.Chrome(service=s)
+        chrome_options = Options()
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
+        driver = webdriver.Chrome(options=chrome_options, service=s)
+
         driver.get(self.url_parse)
         await asyncio.sleep(3)
 
@@ -55,6 +60,7 @@ class LandingPage:
         sheet.append(["Что входит", "Тариф 1", "Тариф 2", "Тариф 3", "Тариф 4"])
         #header_table = driver.find_element(By.XPATH, '//*[@id="__next"]/div[1]/main/div[2]/div/div/div/div[3]')
         header_table = driver.find_element(By.XPATH, '// *[ @ id = "__next"] / div[1] / main / div[1] / div / div / div / div[3]')
+
         div_blocks = header_table.find_elements(By.CSS_SELECTOR, 'div.p-2.tariffs-common_item__iebKT')
         data_first_column = ["_"]
         for div_block in div_blocks:
@@ -63,7 +69,6 @@ class LandingPage:
 
         # Assuming the table is inside a div with class "tariffs-row-desktop_row__9ZMRZ"
         table_rows = driver.find_elements(By.CSS_SELECTOR, '.tariffs-row-desktop_row__9ZMRZ')
-
         # Extract data from each row of the table and write it to Excel
         for i, row in enumerate(table_rows):
             # Extracting text from each cell in the row

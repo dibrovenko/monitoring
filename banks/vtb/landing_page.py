@@ -6,6 +6,7 @@ import uuid
 from pathlib import Path
 
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import pandas as pd
@@ -38,8 +39,12 @@ class LandingPage:
     async def parse(self):
         # Указываем путь до исполняемого файла драйвера Google Chrome
         s = Service(executable_path=chrome_driver_path)
-        # Инициализация веб-драйвера и открываем страницу
-        driver = webdriver.Chrome(service=s)
+        chrome_options = Options()
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
+        driver = webdriver.Chrome(options=chrome_options, service=s)
+
         driver.get(self.url_parse)
         # Получение HTML-кода страницы
         await asyncio.sleep(15)
@@ -92,6 +97,7 @@ class LandingPage:
                 block.find_element(By.XPATH, f"//li[contains(span/text(), '{type_tarrif}')]").click()
                 await asyncio.sleep(1)
         except:
+            await asyncio.sleep(3)
             driver.find_element(By.CSS_SELECTOR,
                                 "button.buttonstyles__Box-foundation-kit__sc-sa2uer-2.LnzIL.table-comparison-popupstyles__ButtonStyled-table-comparison__sc-1e7gpj6-0.gFsLUr").click()
             await asyncio.sleep(7)

@@ -1,4 +1,5 @@
 import asyncio
+from xvfbwrapper import Xvfb
 
 from banks.tochka.main_class import Tochka
 from banks.alfa.main_class import Alfa
@@ -23,6 +24,9 @@ from db.core import AsyncORM
 
 
 async def execute_once_daily():
+
+    vdisplay = Xvfb()
+    vdisplay.start()
 
     tochka = Tochka(tochka_configs=bank_configs['tochka'])
     await tochka.job()
@@ -51,6 +55,8 @@ async def execute_once_daily():
 
     open = Open(open_configs=bank_configs['open'])
     await open.job()
+
+    vdisplay.stop()
 
 
 async def test_execute_once_daily():

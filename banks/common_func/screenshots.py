@@ -45,6 +45,8 @@ async def screenshot_page(url: str, file_name: str | None = None, file_name_bank
     s = Service(executable_path=chrome_driver_path)
     chrome_options = Options()
     chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--window-size=1920,1080")
 
     # Создаем экземпляр браузера с настройками и указываем путь до драйвера
     driver = webdriver.Chrome(service=s, options=chrome_options)

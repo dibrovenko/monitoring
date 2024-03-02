@@ -41,12 +41,13 @@ class LandingPage:
     async def parse(self):
 
         # Инициализация веб-драйвера и открываем страницу
+        s = Service(executable_path=chrome_driver_path)
         chrome_options = Options()
         chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("window-size=1400,2100")
-        s = Service(executable_path=chrome_driver_path)
-        driver = webdriver.Chrome(service=s, options=chrome_options)
+        driver = webdriver.Chrome(options=chrome_options, service=s)
+
         driver.get(self.url_parse)
 
         wait = WebDriverWait(driver, 30)

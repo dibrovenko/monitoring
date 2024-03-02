@@ -64,12 +64,12 @@ async def my_async_function():
 
 @app.on_event("startup")
 async def on_startup():
-    # настройки для бота
+    """# настройки для бота
     webhook_info = await bot.get_webhook_info()
     py_logger.info(f"webhook_info: {webhook_info}")
     if webhook_info.url != WEBHOOK_URL:
         set_webhook = await bot.set_webhook(url=WEBHOOK_URL)
-        py_logger.info(f"set_webhook: {set_webhook}")
+        py_logger.info(f"set_webhook: {set_webhook}")"""
 
     # запускаем базу данных
     await AsyncORM.create_tables(flag="restart")

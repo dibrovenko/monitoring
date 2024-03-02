@@ -1,1 +1,0 @@
-banks.common_func.except_handlers 2024-03-01 20:11:53,690 INFO func: AsyncORM.select_changes_for_daily_notificationПараметры: args=(), kwargs={}

@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 
 from banks.config import chrome_driver_path
@@ -101,7 +102,11 @@ def excel_diff(path_OLD: Path, path_NEW: Path, path_to_save: str):
 
 async def excel_diff_aspose(file_path1: str, file_path2: str) -> str:
     s = Service(executable_path=chrome_driver_path)
-    driver = webdriver.Chrome(service=s)
+    chrome_options = Options()
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--window-size=1920,1080")
+    driver = webdriver.Chrome(options=chrome_options, service=s)
     await asyncio.sleep(2)
     # URL страницы, на которой находится элемент для загрузки файла
     url = 'https://products.aspose.app/cells/ru/comparison'

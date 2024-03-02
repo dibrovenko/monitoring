@@ -6,6 +6,7 @@ import pikepdf
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
@@ -49,8 +50,12 @@ class PdfFile:
 
         # Указываем путь до исполняемого файла драйвера Google Chrome
         s = Service(executable_path=chrome_driver_path)
-        # Инициализация драйвера
-        driver = webdriver.Chrome(service=s)
+        chrome_options = Options()
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
+        driver = webdriver.Chrome(options=chrome_options, service=s)
+
         driver.get(self.url_parse)
         await asyncio.sleep(3)
         # Получение HTML-кода страницы после загрузки

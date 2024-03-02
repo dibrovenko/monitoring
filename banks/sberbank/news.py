@@ -31,8 +31,10 @@ class News:
         s = Service(executable_path=chrome_driver_path)
         chrome_options = Options()
         chrome_options.add_argument('--ignore-certificate-errors')
-        # Инициализация драйвера
-        driver = webdriver.Chrome(service=s, options=chrome_options)
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
+        driver = webdriver.Chrome(options=chrome_options, service=s)
+
         driver.get(self.url_parse)
         await asyncio.sleep(2)
         # Находим блок с новостями
@@ -80,8 +82,10 @@ class News:
         s = Service(executable_path=chrome_driver_path)
         chrome_options = Options()
         chrome_options.add_argument('--ignore-certificate-errors')
-        # Инициализация драйвера
-        driver = webdriver.Chrome(service=s, options=chrome_options)
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
+        driver = webdriver.Chrome(options=chrome_options, service=s)
+
         driver.get(self.url_parse)
         # Находим блок с новостями
         wait = WebDriverWait(driver, 10)

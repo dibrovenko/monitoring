@@ -4,6 +4,7 @@ import uuid
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from datetime import datetime, timedelta
 
@@ -28,8 +29,12 @@ class News:
 
         # Указываем путь до исполняемого файла драйвера Google Chrome
         s = Service(executable_path=chrome_driver_path)
-        # Инициализация драйвера
-        driver = webdriver.Chrome(service=s)
+        chrome_options = Options()
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
+        driver = webdriver.Chrome(options=chrome_options, service=s)
+
         driver.get(self.url_parse)
         # Находим кнопку по классу и кликаем на нее
         """button = driver.find_element(By.CSS_SELECTOR, '.buttonstyles__Box-foundation-kit__sc-sa2uer-2.LnzIL')

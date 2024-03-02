@@ -35,8 +35,12 @@ class PdfFile:
     async def parse(self):
         # Указываем путь до исполняемого файла драйвера Google Chrome
         s = Service(executable_path=chrome_driver_path)
-        # Инициализация драйвера
-        driver = webdriver.Chrome(service=s)
+        chrome_options = Options()
+        chrome_options.add_argument('--ignore-certificate-errors')
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
+        driver = webdriver.Chrome(options=chrome_options, service=s)
+
         driver.get(self.url_parse)
         await asyncio.sleep(10)
 
@@ -169,7 +173,11 @@ async def download_excel(url: str) -> str:
     s = Service(executable_path=chrome_driver_path)
     chrome_options = Options()
     chrome_options.add_experimental_option('prefs', {'download.default_directory': download_path})
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--window-size=1920,1080")
     driver = webdriver.Chrome(service=s, options=chrome_options)
+
     driver.get(url)
     # Ждем некоторое время для загрузки страницы
     await asyncio.sleep(3)
