@@ -43,6 +43,12 @@ class Promotion1:
         # Ожидание загрузки всех элементов на странице
         wait = WebDriverWait(driver, 10)
         wait.until(EC.visibility_of_all_elements_located((By.CLASS_NAME, "MlchtUI-OfferCard__BlockText")))
+        try:
+            element = driver.find_element(By.XPATH, '//*[@id="corp-cookie-warning"]/div/div/div[2]/button/span[2]')
+            element.click()
+            await asyncio.sleep(2.5)
+        except:
+            pass
 
         # Находим все блоки с акциями
         action_blocks = driver.find_elements(By.CLASS_NAME, "MlchtUI-OfferCard")

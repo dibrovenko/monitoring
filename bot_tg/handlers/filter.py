@@ -7,6 +7,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardBut
     InputFile
 from typing import List, Type
 
+
 from db.core import AsyncORM
 from db.schemas import ChangesFULLDTO
 
@@ -73,6 +74,7 @@ async def process_bank(callback_query: types.CallbackQuery, state: FSMContext):
         type_changes_keyboard.add(
             InlineKeyboardButton(text=change_type.value, callback_data=f"type_{change_type.name}"))
     await callback_query.message.answer("Выберите тип изменений:", reply_markup=type_changes_keyboard)
+
 
 
 # @dp.callback_query_handler(lambda c: c.data.startswith('type_'), state=Form.type_changes)

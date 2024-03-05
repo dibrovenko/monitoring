@@ -17,9 +17,10 @@ bot = Bot(token=config.get('Settings', 'bot_token'))
 dp = Dispatcher(bot=bot, storage=storage, run_tasks_by_default=True)
 
 
-from bot_tg.handlers import start, commands, filter
+from bot_tg.handlers import start, commands, filter, errors
 filter.register_handlers_filter(dp)
 commands.register_handlers_commands(dp)
 start.register_handlers_start(dp)
+errors.register_handlers_error(dp)  # ниже всех
 
 

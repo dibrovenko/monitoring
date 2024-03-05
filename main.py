@@ -8,6 +8,7 @@ from fastapi import FastAPI, status, Request, HTTPException
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi import BackgroundTasks
 
 from banks.common_func.notification import notification_text_daily, List_notification
 from db.core import AsyncORM
@@ -64,20 +65,21 @@ async def my_async_function():
 
 @app.on_event("startup")
 async def on_startup():
-    """# настройки для бота
+    # настройки для бота
     webhook_info = await bot.get_webhook_info()
     py_logger.info(f"webhook_info: {webhook_info}")
     if webhook_info.url != WEBHOOK_URL:
         set_webhook = await bot.set_webhook(url=WEBHOOK_URL)
-        py_logger.info(f"set_webhook: {set_webhook}")"""
+        py_logger.info(f"set_webhook: {set_webhook}")
 
     # запускаем базу данных
-    await AsyncORM.create_tables(flag="restart")
-    #asyncio.create_task(execute_once_daily())
+    await AsyncORM.create_tables(flag="delete")
 
     # Добавляем задачу, которая будет выполняться каждую минуту и запускаем планировщик
-    scheduler.add_job(my_async_function, 'interval', minutes=1)
-    scheduler.add_job(my_async_function, 'cron', hour=0, minute=53)
+    #scheduler.add_job(my_async_function, 'cron', hour=1, minute=50)
+    scheduler.add_job(execute_once_daily, 'cron', hour=1, minute=24)
+    scheduler.add_job(execute_once_daily, 'cron', hour=1, minute=52)
+    scheduler.add_job(execute_once_daily, 'cron', hour=2, minute=20)
     scheduler.start()
 
     py_logger.info(f"Bot online {__name__}...")
@@ -90,7 +92,7 @@ async def bot_webhook(update: dict):
     Dispatcher.set_current(dp)
     Bot.set_current(bot)
     await dp.process_update(telegram_update)
-    py_logger.debug(f"Update: {telegram_update}  {__name__}...")
+    py_logger.debug(f"ответ: {telegram_update}  {__name__}...")
     return 200, "ok"
 
 
@@ -104,6 +106,15 @@ async def read_item(request: Request, bank: str, file_name: str):
         return templates.TemplateResponse(f"/{bank}/data/{file_name}", {"request": request, "bank": bank})
     except:
         raise HTTPException(status_code=400, detail="Файл не существует")
+
+
+@app.get("/start_monitor/{user}/{password}", status_code=status.HTTP_200_OK)
+async def read_item(user: str, password: str, background_tasks: BackgroundTasks):
+    if user == "pavel" and password == "1234":
+        background_tasks.add_task(execute_once_daily)
+        return {"message": "Функция мониторинга конкурентов запущена"}
+    else:
+        return {"message": "Неверный логин и пароль"}
 
 
 @app.post("/notification_daily/", response_model=List_notification, status_code=status.HTTP_200_OK)
@@ -137,7 +148,7 @@ async def on_shutdown():
 
 async def startup_test():
     await AsyncORM.create_tables(flag='restart')
-    await execute_once_daily()
+    #await execute_once_daily()
     #await test_execute_once_daily()
     #await execute_once_daily()
 

@@ -97,18 +97,28 @@ class LandingPage:
                 block.find_element(By.XPATH, f"//li[contains(span/text(), '{type_tarrif}')]").click()
                 await asyncio.sleep(1)
         except:
-            await asyncio.sleep(3)
-            driver.find_element(By.CSS_SELECTOR,
-                                "button.buttonstyles__Box-foundation-kit__sc-sa2uer-2.LnzIL.table-comparison-popupstyles__ButtonStyled-table-comparison__sc-1e7gpj6-0.gFsLUr").click()
+            # driver.find_element(By.CSS_SELECTOR,
+            # "button.buttonstyles__Box-foundation-kit__sc-sa2uer-2.LnzIL.table-comparison-popupstyles__ButtonStyled-table-comparison__sc-1e7gpj6-0.gFsLUr").click()
+            driver.find_element(By.CLASS_NAME, "buttonstyles__Box-foundation-kit__sc-sa2uer-2").click()
             await asyncio.sleep(7)
-            driver.find_element(By.XPATH,
-                                '// *[ @ id = "modals-container"] / div[1] / div / div[2] / div / div / div[2] / div[5]').click()
-            await asyncio.sleep(1)
-            driver.find_element(By.XPATH,
-                                '// *[ @ id = "modals-container"] / div[1] / div / div[2] / div / div / div[2] / div[6]').click()
-            await asyncio.sleep(1)
-            driver.find_element(By.XPATH,
-                                '// *[ @ id = "modals-container"] / div[1] / div / div[2] / div / div / div[3] / button').click()
+            try:
+                driver.find_element(By.XPATH,
+                                    '// *[ @ id = "modals-container"] / div[1] / div / div[2] / div / div / div[2] / div[5]').click()
+                await asyncio.sleep(1)
+                driver.find_element(By.XPATH,
+                                    '// *[ @ id = "modals-container"] / div[1] / div / div[2] / div / div / div[2] / div[6]').click()
+                await asyncio.sleep(1)
+                driver.find_element(By.XPATH,
+                                    '// *[ @ id = "modals-container"] / div[1] / div / div[2] / div / div / div[3] / button').click()
+            except:
+                driver.find_element(By.XPATH,
+                                    '// *[ @ id = "modals-container"] / div[2] / div / div[2] / div / div / div[2] / div[5]').click()
+                await asyncio.sleep(1)
+                driver.find_element(By.XPATH,
+                                    '//*[@id="modals-container"]/div[2]/div/div[2]/div/div/div[2]/div[6]').click()
+                await asyncio.sleep(1)
+                driver.find_element(By.XPATH,
+                                    '//*[@id="modals-container"]/div[2]/div/div[2]/div/div/div[3]/button').click()
 
         # еще раз проходим по новым тарифам
         await asyncio.sleep(10)

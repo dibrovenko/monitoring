@@ -69,7 +69,7 @@ class News:
                         link_new_file=download_path,
                         title=title,
                         description=f'{self.descriptions[index]} \n'
-                                    f'Ссылка на акцию:  {current_url} \n'
+                                    f'Ссылка на новость:  {current_url} \n'
                                     f'Страница откуда бралась информация: {self.url_parse}'
                                     )
                     )
@@ -97,6 +97,13 @@ class News:
             await asyncio.sleep(2.5)
             button.click()
             await asyncio.sleep(0.1)
+        except:
+            pass
+
+        try:
+            element = driver.find_element(By.XPATH, '//*[@id="corp-cookie-warning"]/div/div/div[2]/button/span[2]')
+            element.click()
+            await asyncio.sleep(2.5)
         except:
             pass
 

@@ -66,7 +66,7 @@ class News:
                         link_new_file=await screenshot_page(url=self.links[index], file_name=f'{uuid.uuid4()}.png'),
                         title=title,
                         description=f'{self.descriptions[index]} \n'
-                                    f'Ссылка на акцию:  {self.links[index]} \n'
+                                    f'Ссылка на новость:  {self.links[index]} \n'
                                     f'Страница откуда бралась информация: {self.url_parse}'
                                     )
                     )
