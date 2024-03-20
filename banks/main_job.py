@@ -1,5 +1,7 @@
 import asyncio
 from xvfbwrapper import Xvfb
+from celery import Celery
+from celery.schedules import crontab
 
 from banks.tochka.main_class import Tochka
 from banks.alfa.main_class import Alfa
@@ -23,8 +25,12 @@ from banks.mts.test import test_all as mts_test
 from db.core import AsyncORM
 
 
-async def execute_once_daily():
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+cell = Celery("app", broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
 
+
+async def async_execute_once_daily():
     vdisplay = Xvfb()
     vdisplay.start()
 
@@ -59,6 +65,19 @@ async def execute_once_daily():
     vdisplay.stop()
 
 
+@cell.task
+def execute_once_daily():
+    asyncio.run(async_execute_once_daily())
+
+
+cell.conf.beat_schedule = {
+    'run-every-day': {
+        'task': 'banks.main_job.execute_once_daily',
+        'schedule': crontab(minute=2, hour='1,4'),  # Задайте нужное время выполнения (12:00)
+    },
+}
+
+
 async def test_execute_once_daily():
     await AsyncORM.update_date()
     await asyncio.sleep(5)
@@ -75,3 +94,4 @@ async def test_execute_once_daily():
 
     await mts_test()
     pass
+

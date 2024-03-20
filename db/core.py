@@ -95,7 +95,7 @@ class AsyncORM:
         async with async_session_factory() as session:
             query = (
                 select(Changes).
-                    filter(Changes.date > (datetime.now() - timedelta(hours=22)))
+                    filter(Changes.date > (datetime.now() - timedelta(hours=26)))
             )
             res = await session.execute(query)
             result_orm = res.scalars().all()

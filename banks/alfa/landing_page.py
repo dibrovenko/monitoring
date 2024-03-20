@@ -158,3 +158,6 @@ class LandingPage:
                     )
             await AsyncORM.insert_change(class_change=self.change_to_db)
             #os.remove(self.link_new_file)
+
+
+

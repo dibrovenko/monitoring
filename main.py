@@ -4,6 +4,7 @@ import configparser
 import logging
 import sentry_sdk
 
+
 from fastapi import FastAPI, status, Request, HTTPException
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -12,7 +13,7 @@ from fastapi import BackgroundTasks
 
 from banks.common_func.notification import notification_text_daily, List_notification
 from db.core import AsyncORM
-from banks.main_job import execute_once_daily, test_execute_once_daily
+from banks.main_job import execute_once_daily, async_execute_once_daily, test_execute_once_daily
 from bot_tg.create_bot import dp, bot, scheduler
 from aiogram import types, Dispatcher, Bot
 
@@ -58,11 +59,6 @@ WEBHOOK_PATH = f"/bot/{TELEGRAM_BOT_TOKENT}"
 WEBHOOK_URL = f"{NGROK_TUNNEL_URL}{WEBHOOK_PATH}"
 
 
-async def my_async_function():
-    # Ваша асинхронная функция, которую нужно выполнить каждую минуту
-    py_logger.debug("Асинхронная функция выполняется!")
-
-
 @app.on_event("startup")
 async def on_startup():
     # настройки для бота
@@ -71,18 +67,14 @@ async def on_startup():
     if webhook_info.url != WEBHOOK_URL:
         set_webhook = await bot.set_webhook(url=WEBHOOK_URL)
         py_logger.info(f"set_webhook: {set_webhook}")
+    py_logger.info(f"Bot online {__name__}...")
 
     # запускаем базу данных
-    await AsyncORM.create_tables(flag="delete")
+    await AsyncORM.create_tables(flag="restart")
 
     # Добавляем задачу, которая будет выполняться каждую минуту и запускаем планировщик
-    #scheduler.add_job(my_async_function, 'cron', hour=1, minute=50)
-    scheduler.add_job(execute_once_daily, 'cron', hour=1, minute=24)
-    scheduler.add_job(execute_once_daily, 'cron', hour=1, minute=52)
-    scheduler.add_job(execute_once_daily, 'cron', hour=2, minute=20)
-    scheduler.start()
-
-    py_logger.info(f"Bot online {__name__}...")
+    #scheduler.add_job(execute_once_daily, 'cron', hour=11, minute=00)
+    #scheduler.start()
 
 
 @app.post(WEBHOOK_PATH)
@@ -109,9 +101,9 @@ async def read_item(request: Request, bank: str, file_name: str):
 
 
 @app.get("/start_monitor/{user}/{password}", status_code=status.HTTP_200_OK)
-async def read_item(user: str, password: str, background_tasks: BackgroundTasks):
+async def read_item(user: str, password: str):
     if user == "pavel" and password == "1234":
-        background_tasks.add_task(execute_once_daily)
+        execute_once_daily.delay()
         return {"message": "Функция мониторинга конкурентов запущена"}
     else:
         return {"message": "Неверный логин и пароль"}
@@ -132,7 +124,6 @@ async def read_item(bank: str, file_name: str):
         file_path = f"{os.getcwd()}/banks/{bank}/{file_name}"
 
         if not os.path.exists(file_path):
-            print(file_path)
             raise HTTPException(status_code=400, detail="Файл не существует")
         else:
             return FileResponse(file_path)
@@ -148,12 +139,13 @@ async def on_shutdown():
 
 async def startup_test():
     await AsyncORM.create_tables(flag='restart')
-    #await execute_once_daily()
+    #await async_execute_once_daily()
     #await test_execute_once_daily()
-    #await execute_once_daily()
-
-    #await notification_text_daily()
+    #await async_execute_once_daily()
 
 
 if __name__ == '__main__':
     asyncio.run(startup_test())
+
+
+
